@@ -22,7 +22,8 @@
       "@slices/*": ["store/slices/*"],
       "@hooks/*": ["hooks/*"],
       "@utils/*": ["utils/*"],
-      "@api/*": ["api/*"]
+      "@api/*": ["api/*"],
+      "@interfaces/*": ["interfaces/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

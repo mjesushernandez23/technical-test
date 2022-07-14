@@ -1,6 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "@store/store";
-import { UiProps } from "interfaces/uiProps";
+import { UiProps } from "@interfaces/uiProps";
+import { LoginProps } from "@interfaces/apiProps";
+import loginApi from "@api/authApi";
+
+export const isAuthAsync = createAsyncThunk("isAuth/loginApi", async (values: LoginProps) => {
+  const response = await loginApi(values);
+  return response;
+});
 
 const initialState: UiProps = {
   isLoading: false,
@@ -17,6 +24,15 @@ export const uiSlice = createSlice({
     disabledLoading: state => {
       state.isLoading = false;
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(isAuthAsync.pending, state => {
+      state.isLoading = true;
+    }),
+      builder.addCase(isAuthAsync.fulfilled, (state, action: PayloadAction<boolean>) => {
+        state.authStatus = action.payload;
+        state.isLoading = false;
+      });
   },
 });
 

@@ -14,10 +14,10 @@ import Loading from "./Loading";
 import useResizeScreen from "@hooks/useScreenSize";
 
 const navItems = [
-  { path: "", label: "Home" },
-  { path: "login", label: "Login" },
-  { path: "employees", label: "Employees", protect: true },
-  { path: "upload", label: "Upload", protect: true },
+  { path: "/", label: "Home" },
+  { path: "/login", label: "Login" },
+  { path: "/employees", label: "Employees", protect: true },
+  { path: "/upload", label: "Upload", protect: true },
 ];
 
 interface LayoutProps {

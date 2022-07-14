@@ -9,12 +9,15 @@ import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { LinksDesktop, LinksMobile } from "./Links";
+import Links from "./Links";
 import Loading from "./Loading";
+import useResizeScreen from "@hooks/useScreenSize";
 
 const navItems = [
   { path: "", label: "Home" },
   { path: "login", label: "Login" },
+  { path: "employees", label: "Employees", protect: true },
+  { path: "upload", label: "Upload", protect: true },
 ];
 
 interface LayoutProps {
@@ -25,8 +28,9 @@ interface LayoutProps {
 const Layout = (props: LayoutProps) => {
   const { children, window } = props;
   const [showSideBar, setShowSideBar] = useState<boolean>(false);
-  const isLoading = useAppSelector(state => state.ui.isLoading);
+  const { authStatus, isLoading, breakPoint } = useAppSelector(state => state.ui);
 
+  useResizeScreen();
   const handleShowSideBar = (): void => {
     setShowSideBar(prev => !prev);
   };
@@ -45,40 +49,48 @@ const Layout = (props: LayoutProps) => {
             >
               <MenuIcon></MenuIcon>
             </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-            >
-              MUI
-            </Typography>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {navItems.map((item, index) => (
-                <LinksDesktop key={`links-desktop-${index}`} {...item} />
-              ))}
-            </Box>
+            {breakPoint !== "sm" && (
+              <>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  MUI
+                </Typography>
+                <Box>
+                  {navItems.map((item, index) => (
+                    <Links authStatus={authStatus} key={`links-desktop-${index}`} {...item} />
+                  ))}
+                </Box>
+              </>
+            )}
           </Toolbar>
         </AppBar>
         <Box component="nav">
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={showSideBar}
-            onClose={handleShowSideBar}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: "block", sm: "none" },
-              "& .MuiDrawer-paper": { boxSizing: "border-box" },
-            }}
-          >
-            <List>
-              {navItems.map((item, index) => (
-                <LinksMobile key={`links-mobile-${index}`} {...item} />
-              ))}
-            </List>
-          </Drawer>
+          {breakPoint === "sm" && (
+            <>
+              <Drawer
+                container={container}
+                variant="temporary"
+                open={showSideBar}
+                onClose={handleShowSideBar}
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+                sx={{
+                  "& .MuiDrawer-paper": { boxSizing: "border-box" },
+                }}
+              >
+                <List>
+                  {navItems.map((item, index) => (
+                    <Links
+                      authStatus={authStatus}
+                      onMobile={() => handleShowSideBar()}
+                      key={`links-mobile-${index}`}
+                      {...item}
+                    />
+                  ))}
+                </List>
+              </Drawer>
+            </>
+          )}
           <Box component="main">
             <Toolbar />
             {children}

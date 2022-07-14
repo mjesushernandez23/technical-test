@@ -7,26 +7,32 @@ import ListItemText from "@mui/material/ListItemText";
 interface LinksProps {
   path: string;
   label: string;
+  onMobile?: () => void;
+  authStatus: boolean;
+  protect?: boolean;
 }
-export const LinksDesktop = (props: LinksProps) => {
-  const { path, label } = props;
-  return (
-    <Link href={`/${path}`}>
-      <Button LinkComponent="a" color="inherit">{label}</Button>
-    </Link>
-  );
-};
 
-export const LinksMobile = (props: LinksProps) => {
-  const { path, label } = props;
+const Links = (props: LinksProps) => {
+  const { onMobile, authStatus, path, label, protect = false } = props;
+  const hiddenRouter = !protect ? authStatus : !authStatus;
 
-  return (
+  if (hiddenRouter) return null;
+
+  return onMobile ? (
     <ListItem disablePadding>
       <Link href={`/${path}`}>
-        <ListItemButton sx={{ textAlign: "center" }} LinkComponent="a">
+        <ListItemButton sx={{ textAlign: "center" }} LinkComponent="a" onClick={() => onMobile()}>
           <ListItemText primary={label} />
         </ListItemButton>
       </Link>
     </ListItem>
+  ) : (
+    <Link href={`/${path}`}>
+      <Button LinkComponent="a" color="inherit">
+        {label}
+      </Button>
+    </Link>
   );
 };
+
+export default Links;

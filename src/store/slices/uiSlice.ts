@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "@store/store";
-import { UiProps } from "@interfaces/uiProps";
+import { ScreenSizesType, UiProps } from "@interfaces/uiProps";
 import { LoginProps } from "@interfaces/apiProps";
 import loginApi from "@api/authApi";
 
@@ -12,6 +12,7 @@ export const isAuthAsync = createAsyncThunk("isAuth/loginApi", async (values: Lo
 const initialState: UiProps = {
   isLoading: false,
   authStatus: false,
+  breakPoint: null,
 };
 
 export const uiSlice = createSlice({
@@ -23,6 +24,9 @@ export const uiSlice = createSlice({
     },
     disabledLoading: state => {
       state.isLoading = false;
+    },
+    setBreakPoint: (state, action: PayloadAction<ScreenSizesType>) => {
+      state.breakPoint = action.payload;
     },
   },
   extraReducers: builder => {
@@ -36,8 +40,8 @@ export const uiSlice = createSlice({
   },
 });
 
-export const { activeLoading, disabledLoading } = uiSlice.actions;
+export const { activeLoading, disabledLoading, setBreakPoint } = uiSlice.actions;
 
-export const selectUi = (state: AppState) => state.ui.isLoading;
+export const selectUi = (state: AppState) => state.ui;
 
 export default uiSlice.reducer;

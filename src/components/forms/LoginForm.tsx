@@ -5,15 +5,17 @@ import { useFormik } from "formik";
 import SendIcon from "@mui/icons-material/Send";
 import { useAppDispatch } from "@hooks/useRedux";
 import { isAuthAsync } from "@store/slices/uiSlice";
+import { useRouter } from "next/router";
 
-interface LoginFormProps {}
-const LoginForm = (props: LoginFormProps) => {
+const LoginForm = () => {
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
   const { values, errors, handleSubmit, handleChange, handleBlur, resetForm } = useFormik({
     ...validationLogin,
     onSubmit: values => {
-      dispatch(isAuthAsync(values));
+      dispatch(isAuthAsync(values))
+        .then(() => router.push("/employees"))
+        .catch(() => resetForm());
     },
   });
 

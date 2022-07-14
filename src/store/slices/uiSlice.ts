@@ -4,6 +4,7 @@ import { UiProps } from "interfaces/uiProps";
 
 const initialState: UiProps = {
   isLoading: false,
+  authStatus: false,
 };
 
 export const uiSlice = createSlice({
